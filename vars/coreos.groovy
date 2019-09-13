@@ -9,6 +9,8 @@ def pod(params, body) {
     def podObj = readJSON text: podJSON
     podObj['spec']['containers'][1]['image'] = params['image']
 
+    println(params)
+
     if (params['privileged']) {
         // Backwards compat, see https://github.com/projectatomic/rpm-ostree/pull/1899/commits/9c1709c363e94760f0e9461719b92a7a4aca6c63#r323256575
         params['runAsUser'] = 0
@@ -31,11 +33,11 @@ def pod(params, body) {
         podYAML = readFile(file: "${label}.yaml")
     }
 
-    podTemplate(cloud: 'openshift', yaml: podYAML, label: label, defaultContainer: 'jnlp') {
-        node(label) { container('worker') {
-            body.call()
-        }}
-    }
+    //podTemplate(cloud: 'openshift', yaml: podYAML, label: label, defaultContainer: 'jnlp') {
+    //    node(label) { container('worker') {
+    //        body.call()
+    //    }}
+    //}
 }
 
 def shwrap(cmds) {
