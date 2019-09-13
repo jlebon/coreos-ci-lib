@@ -16,9 +16,12 @@ def pod(params, body) {
         params['runAsUser'] = 0
     }
     if (params['runAsUser'] != null) {
+        println("setting runAsUser")
         // XXX: tmp hack to get anyuid SCC; need to ask to get jenkins SA added
         podObj['spec']['serviceAccountName'] = "papr"
         podObj['spec']['containers'][1]['securityContext'] = [runAsUser: params['runAsUser']]
+    } else {
+        println("not setting runAsUser")
     }
 
     if (params['kvm']) {
@@ -32,6 +35,8 @@ def pod(params, body) {
         writeYaml(file: "${label}.yaml", data: podObj)
         podYAML = readFile(file: "${label}.yaml")
     }
+
+    println(podYAML)
 
     //podTemplate(cloud: 'openshift', yaml: podYAML, label: label, defaultContainer: 'jnlp') {
     //    node(label) { container('worker') {
