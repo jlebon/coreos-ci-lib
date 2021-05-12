@@ -65,9 +65,10 @@ def call(params = [:]) {
                 build.logs('-f')
                 // Wait for the build to finish and check the status of it 
                 build.watch {
-                    if (it.object().status.phase != "Complete") {
+                    def status = it.object().status.phase
+                    if (status != "Complete") {
                         currentBuild.result = 'ABORTED'
-                        error("Error building the image.")
+                        error("Error building the image (status is ${status}).")
                     }
                     // The watch func needs to be finish properly,
                     // it only allows true/false as a return. That's
